@@ -141,10 +141,14 @@ void EKF::odom_callback(const nav_msgs::msg::Odometry::ConstSharedPtr msg)
 	time_publish_ = msg->header.stamp;
 	now_time_odom_ = msg->header.stamp;
 	try{
-		rclcpp::Duration duration = now_time_odom_ - last_time_odom_;
-		dt_ = duration.seconds();
+		if (!last_time_odom_.has_value()) {
+    		dt_ = 0.0;
+		} else {
+			rclcpp::Duration duration = now_time_odom_ - last_time_odom_.value();
+			dt_ = duration.seconds();
+		}
 	}catch(std::runtime_error& ex) {
-		RCLCPP_ERROR(this->get_logger(), "Exception: [%s]", ex.what());
+		RCLCPP_ERROR(this->get_logger(), "odom Exception: [%s]", ex.what());
 	}
 	if(is_first_odom_){
 		dt_ = 0.0;
@@ -239,11 +243,15 @@ void EKF::imu_callback(const sensor_msgs::msg::Imu::ConstSharedPtr msg)
 	time_publish_ = msg->header.stamp;
 	now_time_imu_ = msg->header.stamp;
 	try{
-		rclcpp::Duration duration = now_time_imu_ - last_time_imu_;
-		dt_ = duration.seconds();
+		if (!last_time_imu_.has_value()) {
+    		dt_ = 0.0;
+		} else {
+			rclcpp::Duration duration = now_time_imu_ - last_time_imu_.value();
+			dt_ = duration.seconds();
+		}
 	}catch(std::runtime_error& ex) {
 		// ROS_ERROR("Exception: [%s]", ex.what());
-		RCLCPP_ERROR(this->get_logger(), "Exception: [%s]", ex.what());
+		RCLCPP_ERROR(this->get_logger(), "imu Exception: [%s]", ex.what());
 	}
 	if(is_first_imu_){
 		dt_ = 0.0;

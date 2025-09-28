@@ -14,6 +14,7 @@
 #include <tf2_eigen/tf2_eigen.hpp>
 
 #include <Eigen/Dense>
+#include <optional>
 
 class EKF : public rclcpp::Node
 {
@@ -74,9 +75,9 @@ private:
 	geometry_msgs::msg::PoseStamped ekf_pose_;
 	sensor_msgs::msg::Imu imu_;
 	rclcpp::Time now_time_odom_;
-	rclcpp::Time last_time_odom_;
+	std::optional<rclcpp::Time> last_time_odom_;
 	rclcpp::Time now_time_imu_;
-	rclcpp::Time last_time_imu_;
+	std::optional<rclcpp::Time> last_time_imu_;
 	rclcpp::Time time_publish_;
 
 	std_msgs::msg::Bool is_measurement_;
