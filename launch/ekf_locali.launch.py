@@ -13,14 +13,12 @@ def generate_launch_description():
         get_package_share_directory('ekf_localizer'),  # パッケージ名
         'config',  # ディレクトリ名
         'ekf',  # サブディレクトリ
-        # 'ekf.yaml'  # ファイル名
         'ekf.yaml'  # ファイル名
     )
     params_map_matcher = os.path.join(
         get_package_share_directory('ekf_localizer'),  # パッケージ名
         'config',  # ディレクトリ名
         'map_matcher',  # サブディレクトリ
-        # 'map_matcher.yaml'  # ファイル名
         'map_matcher.yaml'  # ファイル名
     )
     pcd_params = {
@@ -40,8 +38,8 @@ def generate_launch_description():
             executable='ekf_localizer_node',
             name='ekf_localizer_node',
             parameters=[params_ekf],
-            # remappings=[('/ekf_pose', '/test/ekf_pose'),
-            #                     ('/ndt_pose', '/test/ndt_pose')],
+            remappings=[('/bno055/imu', '/imu/data'),
+                                ],
             # output='screen',  # 標準出力を表示するように設定
         ),
         
@@ -53,6 +51,13 @@ def generate_launch_description():
             parameters=[params_map_matcher],
             # output='screen',  # 標準出力を表示
         ),
+        # wheel_odometryノード
+        Node(
+            package='wheel_odometry',
+            executable='wheel_odometry_node',
+            name='wheel_odometry_node',
+            # output='screen'
+        ),
 
         # ノード3: TF Cub
         Node(
@@ -61,7 +66,22 @@ def generate_launch_description():
             name='tf_cub_node',
             # output='screen',  # 標準出力を表示
         ),
-        # ↓なぜか/base_link座標系に出力されてしまい
+        Node(
+            package='ekf_localizer',
+            executable='gps_updater_node',
+            name='gps_updater',
+            parameters=[{
+                'gps_topic_name': '/fix',
+                'gps_pose_topic_name': '/gps_pose',
+                'map_frame_id': 'map',
+                'use_manual_origin': False,
+                'min_satellites': 6.0,
+                'max_hdop': 3.0,
+                'max_covariance_threshold': 10.0
+            }],
+            output='screen',
+        ),
+
         # Node(
         #     package='pcl_ros',
         #     executable='pcd_to_pointcloud',

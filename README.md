@@ -7,8 +7,31 @@
 - ROS2 humble
 - ...
 
+### NDT topics
+#### Subscirber
+- /velodyne_points(sensor_msgs/msg/PointCloud2)
+#### Publisher
+- /map_out(sensor_msgs/msg/PointCloud2)
+- /test/ndt_pose(geometry_msgs/msg/PoseStamped)
+- /ndt_pc(sensor_msgs/msg/PointCloud2)
+### EKF topics
+#### Subscirber
+- /odom(nav_msgs/msg/Odometry)
+- /bno055/imu(sensor_msgs/msg/IMU)
+- /test/ndt_pose(geometry_msgs/msg/PoseStamped)
+#### Publisher
+- /test/ekf_pose(geometry_msgs/msg/PoseStamped)
+
+### GPS updater topics
+#### Subscirber
+- /fix(sensor_msgs::msg::NavSatFix)
+#### Publisher
+- /gps_pose(geometry_msgs::msg::PoseWithCovarianceStamped)
+
 ## Install and Build
 ``` bash
+sudo apt update
+sudo apt install libgeographic-dev geographiclib-tools
 # clone repository
 git clone https://github.com/UNI-shibuya-taku/ekf_localizer_ros2.git
 
@@ -40,6 +63,7 @@ colcon build
     TH_COVARIANCE: 1.0 # 変更不要
     TH_POSE_COVARIANCE: 0.4 # 位置の分散の閾値
     TH_DIRECTION_COVARIANCE: 0.2 # 方位の分散の閾値
+    GPS_MEASUREMENT_ENABLE: true # true: GPSによる観測更新を行う false: 行わない
    ```
 
 1. Edit the map_matcher.yaml files:

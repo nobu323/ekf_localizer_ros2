@@ -13,7 +13,7 @@ map_matcher_node:
     is_pcl_offset: false
     # NDTのボクセルサイズ(マシンスペックに合わせて調整)
     VOXEL_SIZE: 0.3
-    VOXEL_SIZE_MAP: 0.2
+    VOXEL_SIZE_MAP: 0.4
 
     # Paththrough Parameter
     # 処理する点群の範囲 (m)
